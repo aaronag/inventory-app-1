@@ -4,13 +4,14 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var inventory = require('./inventory');
 
 var app = express();
 var expressHbs = require('express-handlebars');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('hbs', expressHbs({extname: 'hbs', defautLayout: 'main.hbs'}));
+app.engine('hbs', expressHbs({extname: 'hbs', defaultLayout: 'main.hbs'}));
 app.set('view engine', 'hbs');
 
 app.use(favicon());
@@ -20,9 +21,9 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', function (req, res) {
-	res.render('index', {title: 'Express'});
-});
+app.route('/')
+	// list all our inventory items
+	.get(inventory.list);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
